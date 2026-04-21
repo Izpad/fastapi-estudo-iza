@@ -15,3 +15,11 @@ def test_health_check():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_sobre():
+    response = client.get("/sobre")
+    assert response.status_code == 200
+    data = response.json()
+    assert "autor" in data
+    assert "tecnologias" in data
