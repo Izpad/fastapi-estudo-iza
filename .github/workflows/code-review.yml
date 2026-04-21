@@ -1,0 +1,26 @@
+name: Code Review - Revisao automatica
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  review:
+    name: Revisao automatica com ruff
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
+    steps:
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Revisao de codigo com reviewdog + ruff
+        uses: reviewdog/action-ruff@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          fail_on_error: false
+          level: warning
