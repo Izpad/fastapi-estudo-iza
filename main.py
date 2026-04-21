@@ -15,3 +15,12 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+
+@app.get("/sobre")
+def sobre():
+    return {
+        "autor": "Izabella",
+        "projeto": "API de estudo com FastAPI",
+        "tecnologias": ["Python", "FastAPI", "Docker", "GitHub Actions"],
+    }
