@@ -1,10 +1,20 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 app = FastAPI(
     title="Minha Primeira API",
     description="API de estudo com FastAPI",
     version="1.0.0",
 )
+
+
+class Tarefa(BaseModel):
+    titulo: str
+    concluida: bool = False
+
+
+tarefas: dict[int, Tarefa] = {}
+proximo_id = 1
 
 
 @app.get("/")
@@ -24,3 +34,12 @@ def sobre():
         "projeto": "API de estudo com FastAPI",
         "tecnologias": ["Python", "FastAPI", "Docker", "GitHub Actions"],
     }
+
+
+@app.post("/tarefas", status_code=201)
+def criar_tarefa(tarefa: Tarefa):
+    global proximo_id
+    id_tarefa = proximo_id
+    tarefas[id_tarefa] = tarefa
+    proximo_id += 1
+    return {"id": id_tarefa, **tarefa.model_dump()}
