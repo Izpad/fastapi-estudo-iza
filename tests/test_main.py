@@ -73,3 +73,15 @@ def test_atualizar_tarefa():
 def test_atualizar_tarefa_inexistente():
     response = client.put("/tarefas/999", json={"titulo": "X"})
     assert response.status_code == 404
+
+
+def test_remover_tarefa():
+    criada = client.post("/tarefas", json={"titulo": "Para remover"}).json()
+    response = client.delete(f"/tarefas/{criada['id']}")
+    assert response.status_code == 204
+    assert client.get(f"/tarefas/{criada['id']}").status_code == 404
+
+
+def test_remover_tarefa_inexistente():
+    response = client.delete("/tarefas/999")
+    assert response.status_code == 404
