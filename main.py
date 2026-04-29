@@ -43,3 +43,15 @@ def criar_tarefa(tarefa: Tarefa):
     tarefas[id_tarefa] = tarefa
     proximo_id += 1
     return {"id": id_tarefa, **tarefa.model_dump()}
+
+
+@app.get("/tarefas")
+def listar_tarefas():
+    return [{"id": id_, **t.model_dump()} for id_, t in tarefas.items()]
+
+
+@app.get("/tarefas/{id_tarefa}")
+def obter_tarefa(id_tarefa: int):
+    if id_tarefa not in tarefas:
+        raise HTTPException(status_code=404, detail="Tarefa nao encontrada")
+    return {"id": id_tarefa, **tarefas[id_tarefa].model_dump()}
