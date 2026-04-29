@@ -63,3 +63,10 @@ def atualizar_tarefa(id_tarefa: int, tarefa: Tarefa):
         raise HTTPException(status_code=404, detail="Tarefa nao encontrada")
     tarefas[id_tarefa] = tarefa
     return {"id": id_tarefa, **tarefa.model_dump()}
+
+
+@app.delete("/tarefas/{id_tarefa}", status_code=204)
+def remover_tarefa(id_tarefa: int):
+    if id_tarefa not in tarefas:
+        raise HTTPException(status_code=404, detail="Tarefa nao encontrada")
+    del tarefas[id_tarefa]
