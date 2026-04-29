@@ -56,3 +56,20 @@ def test_obter_tarefa():
 def test_obter_tarefa_inexistente():
     response = client.get("/tarefas/999")
     assert response.status_code == 404
+
+
+def test_atualizar_tarefa():
+    criada = client.post("/tarefas", json={"titulo": "Antiga"}).json()
+    response = client.put(
+        f"/tarefas/{criada['id']}",
+        json={"titulo": "Nova", "concluida": True},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["titulo"] == "Nova"
+    assert data["concluida"] is True
+
+
+def test_atualizar_tarefa_inexistente():
+    response = client.put("/tarefas/999", json={"titulo": "X"})
+    assert response.status_code == 404
