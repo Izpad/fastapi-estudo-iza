@@ -36,3 +36,23 @@ def test_criar_tarefa():
     assert data["titulo"] == "Estudar FastAPI"
     assert data["concluida"] is False
     assert "id" in data
+
+
+def test_listar_tarefas():
+    client.post("/tarefas", json={"titulo": "Tarefa 1"})
+    client.post("/tarefas", json={"titulo": "Tarefa 2"})
+    response = client.get("/tarefas")
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+
+
+def test_obter_tarefa():
+    criada = client.post("/tarefas", json={"titulo": "Comprar pao"}).json()
+    response = client.get(f"/tarefas/{criada['id']}")
+    assert response.status_code == 200
+    assert response.json()["titulo"] == "Comprar pao"
+
+
+def test_obter_tarefa_inexistente():
+    response = client.get("/tarefas/999")
+    assert response.status_code == 404
